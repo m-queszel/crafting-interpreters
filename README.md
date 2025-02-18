@@ -1,2 +1,2 @@
 # crafting-interpreters
-This is This is my implementation of Jlox from "Crafting Interpreters" by Robert Nystrom. 
+This is my implementation of Jlox and Clox from "Crafting Interpreters" by Robert Nystrom. 
