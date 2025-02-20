@@ -85,11 +85,53 @@ public class Scanner {
 			case '\n':
 				line++;
 				break;
-			default:
-				Lox.error(line, "Unexpected character.");
+			case '"':
+				string();
 				break;
+			default:
+				if (isDigit(c)) {
+					number();
+				} else {
+					Lox.error(line, "Unexpected character.");
+					break;
+				}
 		}
 
+	}
+
+	// Helper method to tokenize and handl numbers
+	private void number() {
+		while (isDigit(peek())) {
+			advance();
+		}
+		if (peek() == '.' && isDigit(doublePeek())) {
+			advance();
+
+			while (isDigit(peek())) {
+				advance();
+			}
+		}
+		addToken(TokenType.NUMBER, Double.parseDouble(source.substring(start, current)));
+	}
+
+	// Helper method to tokenize and handle strings
+	private void string() {
+		while (peek() != '"' && !isAtEnd()) {
+			if (peek() == '\n') {
+				line++;
+			}
+			advance();
+		}
+		if (isAtEnd()) {
+			Lox.error(line, "Unterminated string.");
+			return;
+		}
+
+		advance(); // The closing ".
+
+		// Trim surrounding quotes.
+		String value = source.substring(start + 1, current - 1);
+		addToken(TokenType.STRING, value);
 	}
 
 	// Helper method for two character lexemes
@@ -110,6 +152,17 @@ public class Scanner {
 			return '\0';
 		}
 		return source.charAt(current);
+	}
+
+	private char doublePeek() {
+		if (current + 1 >= source.length()) {
+			return '\0';
+		}
+		return source.charAt(current + 1);
+	}
+
+	private boolean isDigit(char c) {
+		return c >= '0' && c <= '9';
 	}
 
 	private boolean isAtEnd() {
