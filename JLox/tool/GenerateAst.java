@@ -19,6 +19,13 @@ public class GenerateAst {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		try {
+			defineAst(outputDir, "Stmt", Arrays.asList(
+					"Expression	: Expr expression",
+					"Print	: Expr expression"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private static void defineAst(String outputDirIn, String baseNameIn, List<String> typesIn) throws IOException {
